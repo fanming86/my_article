@@ -18,6 +18,9 @@ Linux客户端ip为  192.168.247.130</p>
 <p>2）确保安装了nfs-utils  软件包，（两台机器）</p>
 <pre><code>  rpm -qa | grep nfs			#查看是否安装过nfs-utils
 </code></pre>
+<p>若没有安装，使用yum即可安装：<a href="http://www.fanming.shop/post/18/">yum仓库配置方法</a></p>
+<pre><code>  yum install nfs-utils
+</code></pre>
 </li>
 <li>
 <p>3）为了消除防火墙对服务的影响，这里直接关闭防火墙  （两台机器）</p>
