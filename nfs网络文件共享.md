@@ -64,6 +64,19 @@ Windows的ip为  192.168.247.1</p>
 </li>
 <li>
 <h3 id="）linux客户端配置">2）Linux客户端配置</h3>
+<ul>
+<li>
+<p>查看服务端共享的目录</p>
+<pre><code>  showmount -e 192.168.247.129
+</code></pre>
+</li>
+<li>
+<p>挂载共享目录</p>
+<pre><code>  mount -t nfs 192.168.247.129:/public  /public_mount
+</code></pre>
+</li>
+<li></li>
+</ul>
 </li>
 </ul>
 
