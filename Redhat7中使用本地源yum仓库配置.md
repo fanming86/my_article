@@ -29,9 +29,9 @@
     baseurl<span class="token operator">=</span>file:///mnt		<span class="token comment">#安装包存放的地址，这里使用的本地源，所以指向本地路径，即光盘挂在的路径</span>
     gpgcheck<span class="token operator">=</span>0		<span class="token comment">#不校验安装包</span>
 </code></pre>
-<p>** 最后测试一下 **</p>
+<p><strong>最后测试一下</strong></p>
 <pre class=" language-bash"><code class="prism  language-bash"><span class="token punctuation">[</span>root@www yum.repos.d<span class="token punctuation">]</span><span class="token comment"># yum clean all	 清除yum缓存  </span>
-<span class="token punctuation">[</span>root@www yum.repos.d<span class="token punctuation">]</span><span class="token comment"># yum makecache 	缓存本地yum源  </span>
-<span class="token punctuation">[</span>root@www yum.repos.d<span class="token punctuation">]</span><span class="token comment"># yum list 	测试</span>
+<span class="token punctuation">[</span>root@www yum.repos.d<span class="token punctuation">]</span><span class="token comment"># yum makecache 	缓存本地yum源    </span>
+<span class="token punctuation">[</span>root@www yum.repos.d<span class="token punctuation">]</span><span class="token comment"># yum list 	测试  </span>
 </code></pre>
 
