@@ -32,7 +32,8 @@
  <table><tbody><tr><td bgcolor="orange">在这里遇到一个错误，报错如下：<br>
  zipimport.ZipImportError: can't decompress data; zlib not available   <br>
  解决方法：
- yum install zlib*</td></tr></tbody></table>
+ yum install zlib*  <br>
+ 然后在次执行 make install	</td></tr></tbody></table>
 </li>
 <li>
 <p>安装后建立一个链接，这样我们可以用python3直接运行程序，和python2区别开来。</p>
