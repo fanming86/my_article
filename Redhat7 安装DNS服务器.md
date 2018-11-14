@@ -23,7 +23,7 @@
 <p>作者：Tanswer<br>
 链接：<a href="https://www.zhihu.com/question/53882349/answer/449572966">https://www.zhihu.com/question/53882349/answer/449572966</a><br>
 来源：知乎</p>
-<h2 id="dns协议的实现---bind">DNS协议的实现—bind</h2>
+<h2 id="、dns协议的实现---bind">1、DNS协议的实现—bind</h2>
 <pre><code>dns：协议
 bind：dns协议的一种实现
 named：bind程序运行的进程名
@@ -31,25 +31,25 @@ named：bind程序运行的进程名
 用户发起请求连接用的是UDP 53 端口
 从服务器 刷新数据的时候用的 TCP 53 端口
 </code></pre>
-<h4 id="安装bind所需要的软件包：">安装bind所需要的软件包：</h4>
+<h4 id="安装bind所需要的软件包：">1.1 安装bind所需要的软件包：</h4>
 <p>bind-libs：被bind和bind-utils包中的程序共同用到的库文件；<br>
 bind-utils：bind客户端程序集，例如dig, host, nslookup等；<br>
 bind：提供的dns server程序、以及几个常用的测试程序；<br>
 bind-chroot：选装，让named运行于jail模式下；</p>
-<h4 id="启动named服务">启动named服务</h4>
-<pre class=" language-bash"><code class="prism  language-bash">systemctl start named
-systemctl <span class="token function">enable</span> named
+<h4 id="启动named服务">1.2 启动named服务</h4>
+<pre class=" language-bash"><code class="prism  language-bash">systemctl start named  
+systemctl <span class="token function">enable</span> named  
 </code></pre>
-<h4 id="开放防火墙规则">开放防火墙规则</h4>
-<pre class=" language-bash"><code class="prism  language-bash">firewall-cmd --add-service<span class="token operator">=</span>dns --permanent
-firewall-cmd --reload
+<h4 id="开放防火墙规则">1.3 开放防火墙规则</h4>
+<pre class=" language-bash"><code class="prism  language-bash">firewall-cmd --add-service<span class="token operator">=</span>dns --permanent  
+firewall-cmd --reload  
 </code></pre>
-<h2 id="配置文件">配置文件</h2>
-<pre><code>/etc/named.conf ：主配置文件
-/var/named/ ：数据库档案默认放置在这个目录
-/etc/rfc1912.zones ：区域配置文件
+<h2 id="、配置文件">2、配置文件</h2>
+<pre><code>/etc/named.conf ：主配置文件  
+/var/named/ ：数据库档案默认放置在这个目录  
+/etc/rfc1912.zones ：区域配置文件  
 </code></pre>
-<h4 id="编辑配置：">编辑配置：</h4>
+<h4 id="编辑配置：">2.1 编辑配置：</h4>
 <pre class=" language-bash"><code class="prism  language-bash">vim  /etc/named.conf
 
 options <span class="token punctuation">{</span>
@@ -63,7 +63,7 @@ options <span class="token punctuation">{</span>
 	forward only<span class="token punctuation">;</span>  <span class="token comment">#可暂时不设定</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span>  <span class="token comment">#最终记得要结尾符号！</span>
 </code></pre>
-<h4 id="编辑区域配置：">编辑区域配置：</h4>
+<h4 id="编辑区域配置：">2.2 编辑区域配置：</h4>
 <pre class=" language-bash"><code class="prism  language-bash">vim  /etc/rfc1912.zones
 
 <span class="token comment">#添加一个正向解析的区域</span>
@@ -78,7 +78,7 @@ zone <span class="token string">"100.168.192.in-addr.arpa"</span> IN <span class
 	<span class="token function">file</span> <span class="token string">"named.192.168.100"</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span>
 </code></pre>
-<h4 id="编辑正向解析的配置文件：">编辑正向解析的配置文件：</h4>
+<h4 id="编辑正向解析的配置文件：">2.3  编辑正向解析的配置文件：</h4>
 <p>#在/var/named目录下，复制一个文件做为样板：</p>
 <pre class=" language-bash"><code class="prism  language-bash"><span class="token function">cp</span> -p named.localhost named.example.com
 vim named.example.com
@@ -96,12 +96,12 @@ ns  IN  A  192.168.66.128 <span class="token comment"># DNS 服务器 IP</span>
 fan  IN  A  192.168.66.129 <span class="token comment"># 相关的正向解析</span>
 AAAA  ::1
 </code></pre>
-<h2 id="配置文件详解">配置文件详解</h2>
+<h2 id="、配置文件详解">3、配置文件详解</h2>
 <p>序列号：serial，也即是数据库版本号；主服务器数据库内容发生变化时，其版本号递增；<br>
 刷新时间间隔：refresh，从服务器每多久到从服务器检查序列号更新情况；<br>
 重试时间间隔：retry，从服务器从主服务器请求同步解析失败时，再次发起请求尝试的时间间隔<br>
 过期时长：expire，从服务器始终联系不到主服务器时，多久之后放弃主服务器同步；停止提供服务。</p>
-<h5 id="资源记录类型">资源记录类型</h5>
+<h5 id="资源记录类型">3.1资源记录类型</h5>
 <p>SOA：Start Of Authority，其实授权记录()额区域解析库有且只能有一个SOA记录，而且必须放在第一条<br>
 NS： Name Service，区域名–&gt;FQDN 也成为名称服务器  （NS 和 A 记录要  一起出现）；一个区域解析库可以有多个NS记录；其中一个为主的<br>
 A：  Address，地址记录，FQDN –&gt; IPV4<br>
@@ -110,12 +110,12 @@ CNAME：Canonical Name，别名记录<br>
 PTR：Pointer，反向指针记录：IP –&gt; FQDN<br>
 MX： Mail eXchanger，邮件交换器<br>
 优先级：0-99，数字越小优先级越高</p>
-<h5 id="以下几点需要注意：">以下几点需要注意：</h5>
+<h5 id="以下几点需要注意：">3.2 以下几点需要注意：</h5>
 <p>(1) TTL可以从全局继承；<br>
 (2) @表示当前区域的名称；<br>
 (3) 相邻的两条记录其name相同时，后面的可省略；<br>
 (4) 对于正向区域来说，各MX，NS等类型的记录的value为FQDN，此FQDN应该有一个A记录；</p>
-<h2 id="测试">测试</h2>
+<h2 id="、测试">4、测试</h2>
 <pre class=" language-bash"><code class="prism  language-bash">named-checkconf  /etc/named.conf  <span class="token comment">#可以经检查配置文件的语法错误</span>
 systemctl restart named  <span class="token comment">#重启服务</span>
 </code></pre>
