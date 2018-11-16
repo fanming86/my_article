@@ -38,7 +38,9 @@
 <h5 id="在本机进行测试，使用匿名用户登录测试">在本机进行测试，使用匿名用户登录测试</h5>
 <p>此服务正常启动后，可以打开浏览器并在地址栏中输入：<a href="ftp://localhost">ftp://localhost</a>；此时应该可以看到共享的目录 pub ；默认情况下共享目录为/var/ftp。</p>
 <h3 id="、配置文件中的公共配置">2、配置文件中的公共配置</h3>
-<p>主配置文件：/etc/vsftpd/vsftpd.conf</p>
+<p>主配置文件：vim /etc/vsftpd/vsftpd.conf<br>
+//这里我们使用ftpuser用户的家目录作为本地用户访问的共享目录<br>
+//使用</p>
 <pre class=" language-bash"><code class="prism  language-bash">write_enable<span class="token operator">=</span>YES	 	<span class="token comment">#是否允许用户具有在FTP服务器文件中执行写的权限,默认是no</span>
 download_enable<span class="token operator">=</span>YES 	<span class="token comment">#设置用户是否有下载的权限，默认yes</span>
 dirmessage_enable<span class="token operator">=</span>YES 	<span class="token comment">#激活目录信息,当远程用户更改目录时,将出现提示信息</span>
@@ -46,16 +48,17 @@ xferlog_enable<span class="token operator">=</span>YES 		<span class="token comm
 xferlog_file<span class="token operator">=</span>/var/log/xferlog	<span class="token comment">#设置日志存放的位置</span>
 listen_port<span class="token operator">=</span>4449	<span class="token comment">#修改服务端口</span>
 </code></pre>
-<h3 id="、创建用户和共享目录">2、创建用户和共享目录</h3>
-<h3 id="、针对匿名用户的配置">4、针对匿名用户的配置</h3>
+<h3 id="、针对匿名用户的配置">3、针对匿名用户的配置</h3>
 <p>/var/ftp 目录作为匿名用户访问的目录</p>
-<pre class=" language-bash"><code class="prism  language-bash">anonymous_enable<span class="token operator">=</span>YES 	<span class="token comment">#是否允许匿名访问  </span>
+<pre class=" language-bash"><code class="prism  language-bash">anonymous_enable<span class="token operator">=</span>YES 　　　　      <span class="token comment">#	#是否允许匿名访问  </span>
 anon_upload_enable<span class="token operator">=</span>NO   　　　　   <span class="token comment">#上传  </span>
 anon_mkdir_write_enable<span class="token operator">=</span>NO  　　  <span class="token comment">#创建  </span>
-anon_other_write_enable<span class="token operator">=</span>NO       <span class="token comment">#删除  </span>
+anon_other_write_enable<span class="token operator">=</span>NO        <span class="token comment">#删除  </span>
 anon_root<span class="token operator">=</span>/var/ftp 　　　　　　　　 <span class="token comment">#匿名访问目录  </span>
+local_root<span class="token operator">=</span>/home/vsftp            <span class="token comment">#本地用户访问目录  </span>
+local_enable<span class="token operator">=</span>YES      　　　　    <span class="token comment"># 允许使用本地帐户进行FTP用户登录验证  </span>
 </code></pre>
-<h3 id="、针对本地用户的配置">5、针对本地用户的配置</h3>
+<h3 id="、针对本地用户的配置">4、针对本地用户的配置</h3>
 <p>1）创建一个系统本地用户，并使其不能登录</p>
 <pre class=" language-bash"><code class="prism  language-bash"><span class="token comment">#创建用户 </span>
 <span class="token punctuation">[</span>root@client /<span class="token punctuation">]</span><span class="token comment"># useradd -s /sbin/nologin ftpuser  </span>
@@ -65,14 +68,14 @@ anon_root<span class="token operator">=</span>/var/ftp 　　　　　　　　 
 <span class="token punctuation">[</span>root@client /<span class="token punctuation">]</span><span class="token comment"># mkdir /public       </span>
 </code></pre>
 <p>2）更改配置文件</p>
-<pre class=" language-bash"><code class="prism  language-bash">local_enable<span class="token operator">=</span>YES      　<span class="token comment">#是否允许使用本地帐户登录 </span>
-local_root<span class="token operator">=</span>/public     	<span class="token comment">#本地用户访问目录  </span>
-write_enable<span class="token operator">=</span>YES	　　<span class="token comment">#允许本地用户写入  </span>
-local_umask<span class="token operator">=</span>022   　　　<span class="token comment">#设置本地用户默认文件掩码022　　　　　　　</span>
+<pre class=" language-bash"><code class="prism  language-bash">local_enable<span class="token operator">=</span>YES      <span class="token comment">#是否允许使用本地帐户登录 </span>
+local_root<span class="token operator">=</span>/public    <span class="token comment">#本地用户访问目录  </span>
+local_umask<span class="token operator">=</span>022   　　<span class="token comment">#设置本地用户默认文件掩码022　　　</span>
+chroot_local_user<span class="token operator">=</span>YES <span class="token comment">#可以将用户锁定在共享目录中　　　　</span>
 </code></pre>
-<h3 id="、重启ftp服务，便可以访问ftp服务器了">4、重启ftp服务，便可以访问ftp服务器了</h3>
+<h3 id="、重启ftp服务，便可以访问ftp服务器了">5、重启ftp服务，便可以访问ftp服务器了</h3>
 <h5 id="使用本地用户登录-ftpuserpassword192.168.13.128-在浏览器中使用本地用户登录">使用本地用户登录 <a href="ftp://user:password@192.168.13.128">ftp://user:password@192.168.13.128</a> #在浏览器中使用本地用户登录</h5>
 <p><img src="https://ws1.sinaimg.cn/large/006h9k0Tly1fwkmoued00j30g503uq37.jpg" alt=""></p>
-<h4 id="使用匿名用户登录--ftp192.168.13.128-匿名用户访问，直接访问地址即可">使用匿名用户登录  <a href="ftp://192.168.13.128">ftp://192.168.13.128</a> #匿名用户访问，直接访问地址即可</h4>
+<h5 id="使用匿名用户登录--ftp192.168.13.128-匿名用户访问，直接访问地址即可">使用匿名用户登录  <a href="ftp://192.168.13.128">ftp://192.168.13.128</a> #匿名用户访问，直接访问地址即可</h5>
 <p><img src="https://ws1.sinaimg.cn/large/006h9k0Tly1fwkmqdxf3hj30g803zaac.jpg" alt=""></p>
 
